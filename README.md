@@ -9,7 +9,14 @@ mruby-erb
 - No ERB::Util (CGI stuff... you don't need it).
 - No encodings support (MRuby has limited support for this in general).
 
+### API
+
 ```
+# Compile an ERB template.
+# - safe_level is here for API compatability only, and is not used.
+# - The rest is exactly what you're used to from CRuby
+ERB::new(str, safe_level=nil, trim_mode=nil, eoutvar='_erbout')
+
 # Execute a template and return the resulting string.
 # (ERB on MRuby accepts objects instead of bindings throught the API)
 ERB#result(obj=nil)

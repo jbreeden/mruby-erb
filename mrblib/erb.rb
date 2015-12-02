@@ -404,13 +404,21 @@ class ERB
         @trim_mode = trim_mode
         @percent = percent
         if @trim_mode == '>'
-          @scan_line = self.method(:trim_line1)
+          @scan_line = proc { |line, proc|
+            self.trim_line1(line, &proc)
+          }
         elsif @trim_mode == '<>'
-          @scan_line = self.method(:trim_line2)
+          @scan_line = proc { |line, proc|
+            self.trim_line2(line, &proc)
+          }
         elsif @trim_mode == '-'
-          @scan_line = self.method(:explicit_trim_line)
+          @scan_line = proc { |line, proc|
+            self.explicit_trim_line(line, &proc)
+          }
         else
-          @scan_line = self.method(:scan_line)
+          @scan_line = proc { |line, proc|
+            self.scan_line(line, &proc)
+          }
         end
       end
       attr_accessor :stag
@@ -422,19 +430,19 @@ class ERB
             percent_line(line, &block)
           end
         else
-          @scan_line.call(@src, &block)
+          @scan_line.call(@src, block)
         end
         nil
       end
 
       def percent_line(line, &block)
         if @stag || line[0] != ?%
-          return @scan_line.call(line, &block)
+          return @scan_line.call(line, block)
         end
 
         line[0] = ''
         if line[0] == ?%
-          @scan_line.call(line, &block)
+          @scan_line.call(line, block)
         else
           yield(PercentLine.new(line.chomp))
         end

@@ -305,6 +305,7 @@ class ERB
   #   compiler.pre_cmd    = ["_erbout=''"]
   #   compiler.put_cmd    = "_erbout.concat"
   #   compiler.insert_cmd = "_erbout.concat"
+  #   compiler.post_cmd = ["_erbout"]
   #
   #   code, enc = compiler.compile("Got <%= obj %>!\n")
   #   puts code
@@ -574,7 +575,7 @@ class ERB
     end
 
     class Buffer # :nodoc:
-      def initialize(compiler)
+      def initialize(compiler, enc=nil)
         @compiler = compiler
         @line = []
         @script = ""
@@ -596,6 +597,9 @@ class ERB
 
       def close
         return unless @line
+        @compiler.post_cmd.each do |x|
+          push(x)
+        end
         @script << (@line.join('; '))
         @line = nil
       end
@@ -681,7 +685,7 @@ class ERB
       end
       add_put_cmd(out, content) if content.size > 0
       out.close
-      return out.script
+      return out.script, nil
     end
 
     def prepare_trim_mode(mode) # :nodoc:
@@ -719,6 +723,7 @@ class ERB
       @put_cmd = 'print'
       @insert_cmd = @put_cmd
       @pre_cmd = []
+      @post_cmd = []
     end
     attr_reader :percent, :trim_mode
 
@@ -731,6 +736,8 @@ class ERB
     # An array of commands prepended to compiled code
     attr_accessor :pre_cmd
 
+    # An array of commands appended to compiled code
+    attr_accessor :post_cmd
   end
 end
 
@@ -807,7 +814,7 @@ class ERB
     @safe_level = safe_level
     compiler = make_compiler(trim_mode)
     set_eoutvar(compiler, eoutvar)
-    @src = compiler.compile(str)
+    @src, @enc = *compiler.compile(str)
     @filename = nil
   end
 
@@ -834,6 +841,7 @@ class ERB
     compiler.put_cmd = "#{eoutvar}.concat"
     compiler.insert_cmd = "#{eoutvar}.concat"
     compiler.pre_cmd = ["#{eoutvar} = ''"]
+    compiler.post_cmd = ["#{eoutvar}"]
   end
 
   # Generate results and print them. (see ERB#result)

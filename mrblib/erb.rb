@@ -874,14 +874,14 @@ class ERB
   #   erb.def_method(MyClass, 'render(arg1, arg2)', filename)
   #   print MyClass.new.render('foo', 123)
   def def_method(mod, methodname, fname='(ERB)')
-    src = self.src
-    # Compile once, upfront, and use closure to keep it around
-    # without clobbering any namespaces
-    template_as_proc = eval("proc do\n" + src + "\nend\n", nil, fname, -2)
-    mod.define_method(methodname) do
-      self.instance_eval(&template_as_proc)
-    end
+    name = methodname[/([^(]*)/, 1]
+    params = methodname[/\((.*)\)/, 1]
+    template_as_proc = eval("proc do |#{params}|\n" + self.src + "\nend\n", nil, fname, -2)
+    mod.define_method(name, &template_as_proc)
   end
+  
+  # The following methods don't make a lot of sense
+  # without the binding object.
 
   # Create unnamed module, define _methodname_ as instance method of it, and return it.
   #

@@ -24,9 +24,16 @@ template.result(obj[=nil])
 # Define `methodname` as instance method of `mod` from compiled ruby source.
 template.def_method(mod, methodname, fname[='(ERB)'])
 
-# Create unnamed module, define `methodname` as instance method of it, and return it.
+# Define module with methodname as an instance method from compiled ruby source.
 template.def_module(methodname[='erb'])
 
-# Define unnamed class which has `methodname` as instance method, and return it.
-template.def_class(superklass[=Object], methodname[='result'])
+# Define class with methodname as an instance method from compiled ruby source.
+template.def_class(superclass[=Object], methodname[='result'])
+## Example:
+# tmp = "<%= a %> <%= b %>"
+# erb = ERB.new(tmp)
+# Renderer = erb.def_class(Object, 'render(a, b)')
+# renderer = Renderer.new
+# renderer.render(1, 2)
+#  => "1 2"
 ```

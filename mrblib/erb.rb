@@ -854,13 +854,14 @@ class ERB
   # the results of that code.  (See ERB::new for details on how this process
   # can be affected by _safe_level_.)
   #
-  # _b_ accepts a Binding or Proc object which is used to set the context of
-  # code evaluation.
+  # _b_ accepts an object, which is set as `self` in the context of the compiled
+  # template.
   #
   def result(b=nil)
     # No $SAFE in MRuby
     if b
-      b.instance_eval(@src, (@filename || '(erb)'), 0)
+      template_as_proc = eval("proc { " + self.src + "\n}", nil, '(erb)', 0)
+      b.instance_eval(&template_as_proc)
     else
       eval(@src, nil, (@filename || '(erb)'), 0)
     end
@@ -876,7 +877,7 @@ class ERB
   def def_method(mod, methodname, fname='(ERB)')
     name = methodname[/([^(]*)/, 1]
     params = methodname[/\((.*)\)/, 1]
-    template_as_proc = eval("proc do |#{params}|\n" + self.src + "\nend\n", nil, fname, -2)
+    template_as_proc = eval("proc do |#{params}| " + self.src + "\nend\n", nil, fname, 0)
     mod.define_method(name, &template_as_proc)
   end
 

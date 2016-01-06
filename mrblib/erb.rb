@@ -879,9 +879,6 @@ class ERB
     template_as_proc = eval("proc do |#{params}|\n" + self.src + "\nend\n", nil, fname, -2)
     mod.define_method(name, &template_as_proc)
   end
-  
-  # The following methods don't make a lot of sense
-  # without the binding object.
 
   # Create unnamed module, define _methodname_ as instance method of it, and return it.
   #

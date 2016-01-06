@@ -19,9 +19,6 @@ template = ERB.new(str, safe_level[=nil], trim_mode[=nil], eoutvar[='_erbout'])
 
 # Execute a template and return the resulting string.
 # (ERB on MRuby accepts objects instead of bindings throught the API)
-# WARNING: Outstanding bug when using the obj parameter. If you need a context
-#          set, consider using one of the `def_method`, `def_class`, or `def_module`
-#          methods instead.
 template.result(obj[=nil])
 
 # Define `methodname` as instance method of `mod` from compiled ruby source.

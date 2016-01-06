@@ -1,5 +1,5 @@
-mruby-erb
----------
+mruby-erb (incomplete)
+----------------------
 
 [ERB](http://ruby-doc.org/stdlib-2.2.3/libdoc/erb/rdoc/ERB.html), modified (slightly) for MRuby.
 
@@ -19,14 +19,10 @@ template = ERB.new(str, safe_level[=nil], trim_mode[=nil], eoutvar[='_erbout'])
 
 # Execute a template and return the resulting string.
 # (ERB on MRuby accepts objects instead of bindings throught the API)
+# WARNING: This API is very buggy at the moment. Use def_method for now
+#          if you absolutely need the obj context
 template.result(obj[=nil])
 
 # Define `methodname` as instance method of `mod` from compiled ruby source.
 template.def_method(mod, methodname, fname[='(ERB)'])
-
-# Create unnamed module, define `methodname` as instance method of it, and return it.
-template.def_module(methodname[='erb'])
-
-# Define unnamed class which has `methodname` as instance method, and return it.
-template.def_class(superklass[=Object], methodname[='result'])
 ```

@@ -18,7 +18,7 @@ mruby-erb
 template = ERB.new(str, safe_level[=nil], trim_mode[=nil], eoutvar[='_erbout'])
 
 # Execute a template and return the resulting string.
-# (ERB on MRuby accepts objects instead of bindings throughout the API)
+# Accepts an object, rather than a binding.
 template.result(obj[=nil])
 
 # Define `methodname` as instance method of `mod` from compiled ruby source.

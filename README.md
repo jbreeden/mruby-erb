@@ -14,6 +14,7 @@ mruby-erb
 Depends on *some* regexp implementation. By default, mruby-regexp-pcre is used.
 You can override this choice by setting the `MRUBY_REGEXP_GEM` environmnet variable.
 This should hopefully eliminate the need to fork this gem for each regexp implementation.
+(See: [mrbgem.rake](./mrbgem.rake))
 
 ### API
 

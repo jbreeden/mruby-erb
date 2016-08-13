@@ -9,6 +9,12 @@ mruby-erb
 - No ERB::Util (CGI stuff... you don't need it).
 - No encodings support (MRuby has limited support for this in general).
 
+### Dependencies
+
+Depends on *some* regexp implementation. By default, mruby-regexp-pcre is used.
+You can override this choice by setting the `MRUBY_REGEXP_GEM` environmnet variable.
+This should hopefully eliminate the need to fork this gem for each regexp implementation.
+
 ### API
 
 ```Ruby

@@ -1,0 +1,17 @@
+name: build
+on: [pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mruby_version: ["3.0.0", "2.1.2"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install packages
+        run: |
+          sudo apt-get -qq update
+          sudo apt-get -qq install rake bison git gperf
+      - name: Test
+        run: MRUBY_VERSION=${{ matrix.mruby_version }} rake test
+

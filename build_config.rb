@@ -6,6 +6,7 @@ MRuby::Build.new do |conf|
   end
 
   conf.enable_debug
+  conf.enable_test
 
   conf.cc.flags << '-DMRB_INT64'
 
